@@ -10,7 +10,7 @@ services:
     image: braingamer/cadvisor-arm:latest
     ipc: shareable
     networks:
-      - rpimonitor_default
+      - bridge
     privileged: true
     restart: unless-stopped
     security_opt:
@@ -34,7 +34,7 @@ services:
     hostname: rpi-grafana
     image: grafana/grafana:latest
     networks:
-      - rpimonitor_default
+      - bridge
     ports:
       - 3000:3000
     restart: unless-stopped
@@ -51,7 +51,7 @@ services:
     hostname: rpi-exporter
     image: prom/node-exporter:latest
     networks:
-      - rpimonitor_default
+      - bridge
     restart: unless-stopped
   
   blackbox:
@@ -61,9 +61,9 @@ services:
     hostname: blackbox-exporter
     image: prom/blackbox-exporter
     networks:
-      - rpimonitor_default
+      - bridge
     restart: unless-stopped
-    volume: 
+    volumes: 
       - /portainer/Files/AppData/Config/blackbox-exporter:/config
       - /portainer/Files/AppData/Config/blackbox-exporter:master
 
@@ -77,7 +77,7 @@ services:
     hostname: rpi-prom
     image: prom/prometheus:latest
     networks:
-      - rpimonitor_default
+      - bridge
     restart: unless-stopped
     volumes:
       # to be modified depending on your needs
@@ -89,5 +89,5 @@ services:
       - blackbox:blackbox
 
 networks:
-  rpimonitor_default:
+  bridge:
     external: true
