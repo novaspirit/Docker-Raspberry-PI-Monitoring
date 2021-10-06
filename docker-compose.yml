@@ -40,9 +40,9 @@ services:
     restart: unless-stopped
     volumes:
       # to be modified depending on your needs
-      - /path/to/your/grafana/data:/var/lib/grafana
-      - /path/to/your/grafana/grafana.ini:/etc/grafana/grafana.ini
-      - /path/to/your/grafana/provisioning:/etc/grafana/provisioning
+      - /portainer/Files/AppData/Config/grafana/data:/var/lib/grafana
+      - /portainer/Files/AppData/Config/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - /portainer/Files/AppData/Config/grafana/provisioning:/etc/grafana/provisioning
 
   node-exporter:
     container_name: monitoring-node-exporter
@@ -53,6 +53,19 @@ services:
     networks:
       - rpimonitor_default
     restart: unless-stopped
+  
+  blackbox:
+    container_name: blackbox_exporter
+    expose:
+      - 9115
+    hostname: blackbox-exporter
+    image: prom/blackbox-exporter
+    networks:
+      - rpimonitor_default
+    restart: unless-stopped
+    volume: 
+      - /portainer/Files/AppData/Config/blackbox-exporter:/config
+      - /portainer/Files/AppData/Config/blackbox-exporter:master
 
   prometheus:
     command:
@@ -68,8 +81,8 @@ services:
     restart: unless-stopped
     volumes:
       # to be modified depending on your needs
-      - /path/to/your/prometheus/data:/prometheus
-      - /path/to/your/prometheus/config:/etc/prometheus/
+      - /portainer/Files/AppData/Config/prometheus/data:/prometheus
+      - /portainer/Files/AppData/Config/prometheus/config:/etc/prometheus/
     links:
       - cadvisor:cadvisor
       - node-exporter:node-exporter
